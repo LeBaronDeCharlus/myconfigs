@@ -47,18 +47,19 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "urxvtd","unclutter -root" })
+--run_once({ "urxvtd","unclutter -root" })
 run_once({"unclutter -root" })
 -- }}}
 
 -- {{{ Variable definitions
-local chosen_theme = "catppuccin"
+local chosen_theme = "powerarrow-dark"
 local modkey       = "Mod4"
 local altkey       = "Mod1"
 local terminal     = "kitty"
-local editor       = os.getenv("EDITOR") or "neovim" or "vim"
+local editor       = os.getenv("EDITOR") or "nvim" or "vim"
 local gui_editor   = "gvim"
-local browser      = "firefox"
+--local browser      = "firefox"
+local browser      = "/usr/bin/brave-browser"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5", "6", "7", "8", "9" }
@@ -273,14 +274,18 @@ globalkeys = awful.util.table.join(
               {description = "jump to urgent client", group = "client"}),
 
     awful.key({ }, "F12", function () awful.util.spawn("sh /home/kaderovski/Payfit/bin/lock.sh") end),
+    awful.key({ modkey }, "l", function () awful.util.spawn("sh /home/kaderovski/bin/lock.sh") end),
+    awful.key({"Control", "Shift" }, "s", function () awful.util.spawn("/usr/bin/flameshot gui") end),
 
 
     awful.key({ modkey,           }, "Up",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Down",  awful.tag.viewnext       ),
-    awful.key({ modkey,}, "a", function () awful.util.spawn("firefox") end),
+    -- awful.key({ modkey,}, "a", function () awful.util.spawn("/home/kaderovski/qutebrowser-profile/qutebrowser-profile") end),
+    --awful.key({ modkey,}, "a", function () awful.util.spawn("firefox") end),
+    awful.key({ modkey,}, "a", function () awful.util.spawn("/usr/bin/brave-browser") end),
     awful.key({ modkey, }, "Left", function () awful.screen.focus_relative(1) end),
-    awful.key({ modkey, }, "q", function () awful.screen.focus_relative(-1) end),
-    awful.key({ modkey, }, "g", function () awful.screen.focus_relative(1) end),
+    awful.key({ modkey, }, "q", function () awful.screen.focus_relative(1) end),
+    awful.key({ modkey, }, "g", function () awful.screen.focus_relative(-1) end),
     awful.key({ modkey, }, "Right", function () awful.screen.focus_relative(-1) end),
 
 	      awful.key({ modkey,           }, "Tab",
@@ -430,7 +435,7 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Copy primary to clipboard (terminals to gtk)
-    awful.key({ modkey }, "c", function () awful.spawn("xsel | xsel -i -b") end),
+    -- awful.key({ modkey }, "c", function () awful.spawn("xsel | xsel -i -b") end),
     -- Copy clipboard to primary (gtk to terminals)
     awful.key({ modkey }, "v", function () awful.spawn("xsel -b | xsel") end),
 
@@ -449,10 +454,17 @@ globalkeys = awful.util.table.join(
 		end)
     --]]
     -- Prompt
-    awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
-              {description = "run prompt", group = "launcher"}),
+    awful.key({ modkey },            "r",     function () awful.util.spawn("rofi -show drun") end,
+	      {description = "run prompt", group = "launcher"}),
+    awful.key({ modkey },            "c",     function () awful.util.spawn("rofi -show window") end,
+	      {description = "run prompt", group = "launcher"}),
+    awful.key({ modkey },            "x",     function () awful.util.spawn("rofi -show run") end,
+	      {description = "run prompt", group = "launcher"}),
 
-    awful.key({ modkey }, "x",
+    -- awful.key({ modkey }, "r", function () awful.screen.focused().mypromptbox:run() end,
+    --           {description = "run prompt", group = "launcher"}),
+
+    awful.key({ modkey }, "è",
               function ()
                   awful.prompt.run {
                     prompt       = "Run Lua code: ",
@@ -674,6 +686,7 @@ client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_n
 do
   local cmds =
   {
+      -- "picom",
 --    "slack-client",
 --    "$HOME/Payfit/bin/init.sh 50",
 --    "1password",
@@ -683,3 +696,5 @@ do
     awful.util.spawn(i)
   end
 end
+
+run_once({"feh --bg-fill $HOME/.config/awesome/themes/powerarrow-dark/wall.png"})
